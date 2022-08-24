@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="form-group">
+      <label for="usr">Plate :</label>
+      <input
+        type="text"
+        onkeyup="plateMaskControl()"
+        class="form-control"
+        id="plate"
+      />
+    </div>
+  </body>
+  <script>
+    function plateMaskControl() {
+      let plateVal = document.getElementById("plate").value;
+      let plate = plateVal.toUpperCase();
+      plate = plate.replaceAll("-", "");
+      let plateMaskValue = "";
+      if (/[0-9]{1}/.test(plate[0])) {
+        if (/[0-9]{1}/.test(plate[1])) {
+          if (/[A-Z]{1}/.test(plate[2])) {
+            plateMaskValue = plate.substring(0, 2) + "-" + plate[2];
+            if (/[0-9]{1}/.test(plate[3])) {
+              /// "99-X-9999", "99-X-99999"
+              plateMaskValue =
+                plate.substring(0, 2) +
+                "-" +
+                plate[2] +
+                "-" +
+                plate.substring(3, 8).replace(/[^0-9]/g, "");
+            } else {
+              //"99-XX-999", "99-XX-9999"
+              plateMaskValue =
+                plate.substring(0, 2) + "-" + plate.substring(2, 4);
+              if (/[0-9]{1}/.test(plate[4])) {
+                plateMaskValue =
+                  plate.substring(0, 2) +
+                  "-" +
+                  plate.substring(2, 4) +
+                  "-" +
+                  plate.substring(4, 8).replace(/[^0-9]/g, "");
+              } else {
+                //"99-XXX-99" , "99-XXX-999"
+                if (/[0-9]{1}/.test(plate[5])) {
+                  plateMaskValue =
+                    plate.substring(0, 2) +
+                    "-" +
+                    plate.substring(2, 5) +
+                    "-" +
+                    plate.substring(5, 8).replace(/[^0-9]/g, "");
+                } else {
+                  plateMaskValue =
+                    plate.substring(0, 2) + "-" + plate.substring(2, 5);
+                }
+              }
+            }
+          } else {
+            plateMaskValue = plate.substring(0, 2);
+          }
+        } else {
+          plateMaskValue = plate[0];
+        }
+      } else {
+        plateMaskValue = "";
+      }
+      document.getElementById("plate").value = plateMaskValue;
+    }
+  </script>
+</html>
